@@ -216,29 +216,14 @@ for line in textFile:
             unigramDict[word] = 1
         if word == '<s>':
             previous = word
-        elif previous + " " + word in bigramDict:
-            bigramDict[previous + " " + word] += 1
-            previous = word
-        else:
-            bigramDict[previous + " " + word] = 1
-            previous = word
-unigramVocSize = len(unigramDict.keys())
-textFile.close()
-
-File = open('unknown-brown-train.txt', 'r')
-bigramDict = {}
-previous = ""
-for line in File:
-    for word in line.split():
-        if word == '<s>':
-            previous = word
         elif previous + " " + word not in bigramDict:
             bigramDict[previous + " " + word] = 1
             previous = word
         else:
             bigramDict[previous + " " + word] += 1
             previous = word
-File.close()
+unigramVocSize = len(unigramDict.keys())
+textFile.close()
 
 print("SOLUTION TO #1")
 print("Unique words in training corpus =", unigramVocSize)
