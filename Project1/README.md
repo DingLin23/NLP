@@ -1,0 +1,1 @@
+To run this project and obtain the solutions just type in "python main.py" and the preprocessing and training of the models will be done and solutions for all of the questions including the write up will be there.

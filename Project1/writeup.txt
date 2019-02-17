@@ -1,0 +1,164 @@
+
+Question 1
+
+Unique words in training corpus = 15031
+
+Question 2
+Word tokens in training corpus = 498474
+
+Question 3
+modified-brown-test.txt
+Total # of words = 18518
+Words not in training data = 1110
+Percentage = 0.059941678366994273
+
+modified-learner-test.txt
+Total # of words = 9170
+Words not in training data = 463
+Percentage = 0.0504907306434024
+
+Question 4
+modified-brown-test.txt
+Total # of words = 17694
+Bigrams not in training data = 4682
+Percentage = 0.26460947213744773
+
+modified-learner-test.txt
+Total # of words = 8670
+Bigrams not in training data = 2310
+Percentage = 0.2664359861591695
+
+Question 5 and 6
+p(he) = 5957/498474
+p(was) = 5149/498474
+p(laughed) = 43/498474
+p(off) = 402/498474
+p(the) = 24657/498474
+p(screen) = 15/498474
+p(.) = 22238/498474
+p(</s>) = 26000/498474
+
+Unigram log probability = -64.86594292562941
+Unigram perplexity = 147.78202494498612
+
+p(he|<s>) = 2133/26000
+p(was|he) = 692/5957
+p(laughed|was) = 0/5149
+p(off|laughed) = 0/43
+p(the|off) = 75/402
+p(screen|the) = 3/24657
+p(.|screen) = 0/15
+p(</s>|.) = 22238/22238
+
+Bigram log probability = 0
+Bigram perplexity = Undefined
+
+p(he|<s>) = 2134/41031
+p(was|he) = 693/20988
+p(laughed|was) = 1/15074
+p(off|laughed) = 1/15433
+p(the|off) = 76/15433
+p(screen|the) = 4/39688
+p(.|screen) = 1/37269
+p(</s>|.) = 22239/37269
+
+Bigram smoothing log probability = -72.93025620609369
+Bigram smoothing perplexity = 275.0141044324117
+
+<s> There was no compulsion behind them . </s>
+
+p(there) = 1243/498474
+p(was) = 5149/498474
+p(no) = 998/498474
+p(<unk>) = 13219/498474
+p(behind) = 166/498474
+p(them) = 812/498474
+p(.) = 22238/498474
+p(</s>) = 26000/498474
+
+Unigram log probability = -59.00702251167198
+Unigram perplexity = 94.11389507774473
+
+p(there|<s>) = 379/26000
+p(was|there) = 381/1243
+p(no|was) = 120/5149
+p(<unk>|no) = 27/998
+p(behind|<unk>) = 5/13219
+p(them|behind) = 10/166
+p(.|them) = 137/812
+p(</s>|.) = 22238/22238
+
+Bigram log probability = -36.42614031888745
+Bigram perplexity = 16.533828523548188
+
+p(there|<s>) = 380/41031
+p(was|there) = 382/16274
+p(no|was) = 121/20180
+p(<unk>|no) = 28/16029
+p(behind|<unk>) = 6/28250
+p(them|behind) = 11/15197
+p(.|them) = 138/15843
+p(</s>|.) = 22239/37269
+
+Bigram smoothing log probability = -58.93122645395324
+Bigram smoothing perplexity = 93.56610226591656
+
+<s> I look forward to hearing your reply . </s>
+
+p(i) = 3235/498474
+p(look) = 231/498474
+p(forward) = 47/498474
+p(to) = 9789/498474
+p(hearing) = 30/498474
+p(your) = 367/498474
+p(reply) = 29/498474
+p(.) = 22238/498474
+p(</s>) = 26000/498474
+
+Unigram log probability = -84.63012364878018
+Unigram perplexity = 352.8747435254266
+
+p(i|<s>) = 916/26000
+p(look|i) = 1/3235
+p(forward|look) = 4/231
+p(to|forward) = 13/47
+p(hearing|to) = 0/9789
+p(your|hearing) = 0/30
+p(reply|your) = 1/367
+p(.|reply) = 6/29
+p(</s>|.) = 22238/22238
+
+Bigram log probability = 0
+Bigram perplexity = Undefined
+
+p(i|<s>) = 917/41031
+p(look|i) = 2/18266
+p(forward|look) = 5/15262
+p(to|forward) = 14/15078
+p(hearing|to) = 1/15061
+p(your|hearing) = 1/15398
+p(reply|your) = 2/15398
+p(.|reply) = 7/15060
+p(</s>|.) = 22239/37269
+
+Bigram smoothing log probability = -93.4932169533023
+Bigram smoothing perplexity = 652.268295379401
+
+Question 7
+modified-brown-test.txt
+
+Unigram perplexity = 320.1785803202881
+
+Bigram perplexity = 21.70397754661539
+728 of 824 sentences had zero probability and were discarded
+
+Bigram smoothing perplexity = 668.709516762931
+
+modified-learner-test.txt
+
+Unigram perplexity = 348.7097569950318
+
+Bigram perplexity = 35.03097322384013
+464 of 500 sentences had zero probability and were discarded
+
+Bigram smoothing perplexity = 845.4916726844544

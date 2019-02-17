@@ -7,56 +7,56 @@ def addPadding(fileName, newFile):
                 lineEdited = "<s> " + line.replace('\n', ' </s>\n')
                 w.write(lineEdited.lower())
                 
-def unigram(textFile, unigramDict):
+def unigramNotInTraining(fileName, unigram):
     tokens = 0
     tokensNotInTraining = 0
-    for line in textFile:
+    for line in fileName:
         for word in line.split():
             tokens += 1
-            if word not in unigramDict:
+            if word not in unigram:
                 tokensNotInTraining += 1
-    print(textFile.name)
+    print(fileName.name)
     print("Total # of words =", tokens)
     print("Words not in training data =", tokensNotInTraining)
     print("Percentage =", (tokensNotInTraining / tokens))
     print()
 
-def bigram(textFile, unigramDict, bigramDict):
+def bigramNotInTraining(fileName, unigram, bigram):
     bigrams = 0
     bigramsNotInTraining = 0
-    for line in textFile:
+    for line in fileName:
         previous = ""
         for word in line.split():
-            if word not in unigramDict:
+            if word not in unigram:
                 word = "<unk>"
             if word == '<s>':
                 previous = word
-            elif previous + " " + word not in bigramDict:
+            elif previous + " " + word not in bigram:
                 bigramsNotInTraining += 1
                 bigrams += 1
                 previous = word
             else:
                 bigrams += 1
                 previous = word
-    print( textFile.name)
+    print(fileName.name)
     print("Total # of words =", bigrams)
     print("Bigrams not in training data =", bigramsNotInTraining)
     print("Percentage =", (bigramsNotInTraining / bigrams))
     print()
 
-def sentencePerplexity(sentence, unigramDict, bigramDict, numTokens):
+def sentencePerplexity(sentence, unigram, bigram, tokens):
     print(sentence)
     print()
     numWords = len(sentence.split())
     logProb = 0
     for word in sentence.lower().split():
-        if word not in unigramDict:
+        if word not in unigram:
             word = "<unk>"
         if word == '<s>':
             pass
         else:
-            logProb += math.log2(unigramDict[word] / numTokens)
-            print("p(" + word + ") =", str(unigramDict[word]) + "/" + str(numTokens))
+            logProb += math.log2(unigram[word] / tokens)
+            print("p(" + word + ") =", str(unigram[word]) + "/" + str(tokens))
     print()
     print("Unigram log probability =", logProb)
     l = (1 / numWords) * logProb
@@ -65,18 +65,18 @@ def sentencePerplexity(sentence, unigramDict, bigramDict, numTokens):
     sentenceProb = 1
     previous = ""
     for word in sentence.lower().split():
-        if word not in unigramDict:
+        if word not in unigram:
             word = "<unk>"
         if word == '<s>':
             previous = word
-        elif previous + " " + word not in bigramDict:
-            sentenceProb *= (0 / unigramDict[previous])
-            print("p(" + word + "|" + previous + ") =", str(0) + "/" + str(unigramDict[previous]))
+        elif previous + " " + word not in bigram:
+            sentenceProb *= (0 / unigram[previous])
+            print("p(" + word + "|" + previous + ") =", str(0) + "/" + str(unigram[previous]))
             previous = word
         else:
-            sentenceProb *= (bigramDict[previous + " " + word] / unigramDict[previous])
+            sentenceProb *= (bigram[previous + " " + word] / unigram[previous])
             print("p(" + word + "|" + previous + ") =",
-                  str(bigramDict[previous + " " + word]) + "/" + str(unigramDict[previous]))
+                  str(bigram[previous + " " + word]) + "/" + str(unigram[previous]))
             previous = word
     print()
     if sentenceProb == 0:
@@ -89,18 +89,18 @@ def sentencePerplexity(sentence, unigramDict, bigramDict, numTokens):
     print()
     logProb = 0
     for word in sentence.lower().split():
-        if word not in unigramDict:
+        if word not in unigram:
             word = "<unk>"
         if word == '<s>':
             previous = word
-        elif previous + " " + word not in bigramDict:
-            logProb += math.log2(1 / (unigramDict[previous] + len(unigramDict.items())))
-            print("p(" + word + "|" + previous + ") =", str(1) + "/" + str(unigramDict[word] + len(unigramDict.items())))
+        elif previous + " " + word not in bigram:
+            logProb += math.log2(1 / (unigram[previous] + len(unigram.items())))
+            print("p(" + word + "|" + previous + ") =", str(1) + "/" + str(unigram[word] + len(unigram.items())))
             previous = word
         else:
-            logProb += math.log2((bigramDict[previous + " " + word] + 1) / (unigramDict[previous] + len(unigramDict.items())))
-            print("p(" + word + "|" + previous + ") =", str(bigramDict[previous + " " + word] + 1) + "/" + str(
-                unigramDict[previous] + len(unigramDict.items())))
+            logProb += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
+            print("p(" + word + "|" + previous + ") =", str(bigram[previous + " " + word] + 1) + "/" + str(
+                unigram[previous] + len(unigram.items())))
             previous = word
     print()
     print("Bigram smoothing log probability =", logProb)
@@ -108,42 +108,42 @@ def sentencePerplexity(sentence, unigramDict, bigramDict, numTokens):
     print("Bigram smoothing perplexity =", pow(2, -l))
     print()
     
-def filePerplexity(textFile, unigramDict, bigramDict, tokens):
+def filePerplexity(fileName, unigram, bigram, tokens):
     numWords = 0
     numWordsBigram = 0
     numLines = 0
     numLinesDiscarded = 0
-    for line in textFile:
+    for line in fileName:
         numLines += 1
         for word in line.split():
             numWords += 1
             numWordsBigram += 1
-    textFile = open(textFile.name, 'r')
+    fileName = open(fileName.name, 'r')
     totalUnigramLogProb = 0
     totalBigramLogProb = 0
     totalSmoothedBigramLogProb = 0
-    for line in textFile:
+    for line in fileName:
         logProb = 0
         for word in line.split():
-            if word not in unigramDict:
+            if word not in unigram:
                 word = "<unk>"
             if word == '<s>':
                 pass
             else:
-                logProb += math.log2(unigramDict[word] / tokens)
+                logProb += math.log2(unigram[word] / tokens)
         totalUnigramLogProb += logProb
         sentenceProb = 1
         previous = ""
         for word in line.split():
-            if word not in unigramDict:
+            if word not in unigram:
                 word = "<unk>"
             if word == '<s>':
                 previous = word
-            elif previous + " " + word not in bigramDict:
-                sentenceProb *= (0 / unigramDict[previous])
+            elif previous + " " + word not in bigram:
+                sentenceProb *= (0 / unigram[previous])
                 previous = word
             else:
-                sentenceProb *= (bigramDict[previous + " " + word] / unigramDict[previous])
+                sentenceProb *= (bigram[previous + " " + word] / unigram[previous])
                 previous = word
         if sentenceProb == 0:
             numWordsBigram -= len(line.split())
@@ -152,18 +152,18 @@ def filePerplexity(textFile, unigramDict, bigramDict, tokens):
             totalBigramLogProb += math.log2(sentenceProb)
         logProb = 0
         for word in line.split():
-            if word not in unigramDict:
+            if word not in unigram:
                 word = "<unk>"
             if word == '<s>':
                 previous = word
-            elif previous + " " + word not in bigramDict:
-                logProb += math.log2(1 / (unigramDict[previous] + len(unigramDict.items())))
+            elif previous + " " + word not in bigram:
+                logProb += math.log2(1 / (unigram[previous] + len(unigram.items())))
                 previous = word
             else:
-                logProb += math.log2((bigramDict[previous + " " + word] + 1) / (unigramDict[previous] + len(unigramDict.items())))
+                logProb += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
                 previous = word
         totalSmoothedBigramLogProb += logProb
-    print(textFile.name)
+    print(fileName.name)
     print()
     l = (1 / numWords) * totalUnigramLogProb
     print("Unigram perplexity =", pow(2, -l))
@@ -205,31 +205,31 @@ currentFile.close()
 newFile.close()
 
 textFile = open('unknown-brown-train.txt', 'r')
-unigramDict = {}
-bigramDict = {}
+unigram = {}
+bigram = {}
 previous = ""
 for line in textFile:
     for word in line.split():
-        if word in unigramDict:
-            unigramDict[word] += 1
+        if word in unigram:
+            unigram[word] += 1
         else:
-            unigramDict[word] = 1
+            unigram[word] = 1
         if word == '<s>':
             previous = word
-        elif previous + " " + word not in bigramDict:
-            bigramDict[previous + " " + word] = 1
+        elif previous + " " + word not in bigram:
+            bigram[previous + " " + word] = 1
             previous = word
         else:
-            bigramDict[previous + " " + word] += 1
+            bigram[previous + " " + word] += 1
             previous = word
-unigramVocSize = len(unigramDict.keys())
+unigramVocSize = len(unigram.keys())
 textFile.close()
 
 print("SOLUTION TO #1")
 print("Unique words in training corpus =", unigramVocSize)
 print()
 
-values = unigramDict.values()
+values = unigram.values()
 tokens = 0
 for val in values:
     tokens += val
@@ -242,42 +242,44 @@ print("SOLUTION TO #5/#6")
 sentence1 = "<s> He was laughed off the screen . </s>"
 sentence2 = "<s> There was no compulsion behind them . </s>"
 sentence3 = "<s> I look forward to hearing your reply . </s>"
-sentencePerplexity(sentence1, unigramDict, bigramDict, tokens)
-sentencePerplexity(sentence2, unigramDict, bigramDict, tokens)
-sentencePerplexity(sentence3, unigramDict, bigramDict, tokens)
+sentencePerplexity(sentence1, unigram, bigram, tokens)
+sentencePerplexity(sentence2, unigram, bigram, tokens)
+sentencePerplexity(sentence3, unigram, bigram, tokens)
 
 print("SOLUTION TO #7")
 textFile1 = open('modified-brown-test.txt', 'r')
 textFile2 = open('modified-learner-test.txt', 'r')
-filePerplexity(textFile1, unigramDict, bigramDict, tokens)
-filePerplexity(textFile2, unigramDict, bigramDict, tokens)
+filePerplexity(textFile1, unigram, bigram, tokens)
+filePerplexity(textFile2, unigram, bigram, tokens)
 textFile1.close()
 textFile2.close()
 
+print("The modified-learner-test.txt file had higher values than the modified-brown-test.txt file, but the bigram perplexity with and without smoothing but had more than the unigram perplexity.")
+
 unigram_file = open('modified-brown-train.txt', 'r')
-unigramDict = {}
+unigram = {}
 for line in unigram_file:
     for word in line.split():
-        if word in unigramDict:
-            unigramDict[word] += 1
+        if word in unigram:
+            unigram[word] += 1
         else:
-            unigramDict[word] = 1
+            unigram[word] = 1
 unigram_file.close()
 
 print("SOLUTION TO #3")
 print()
-textFileOne = open('modified-brown-test.txt', 'r')
-textFileTwo = open('modified-learner-test.txt', 'r')
-unigram(textFileOne, unigramDict)
-unigram(textFileTwo, unigramDict)
-textFileOne.close()
-textFileTwo.close()
+fileName1 = open('modified-brown-test.txt', 'r')
+fileName2 = open('modified-learner-test.txt', 'r')
+unigramNotInTraining(fileName1, unigram)
+unigramNotInTraining(fileName2, unigram)
+fileName1.close()
+fileName2.close()
 
 print("SOLUTION TO #4")
 print()
-first_text_File = open('modified-brown-test.txt', 'r')
-second_text_File = open('modified-learner-test.txt', 'r')
-bigram(first_text_File, unigramDict, bigramDict)
-bigram(second_text_File, unigramDict, bigramDict)
-first_text_File.close()
-second_text_File.close()
+File1 = open('modified-brown-test.txt', 'r')
+File2 = open('modified-learner-test.txt', 'r')
+bigramNotInTraining(File1, unigram, bigram)
+bigramNotInTraining(File2, unigram, bigram)
+File1.close()
+File2.close()
