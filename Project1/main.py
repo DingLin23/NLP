@@ -1,12 +1,15 @@
+#Math imported for log calculations in sentencePerplexity and filePerplexity
 import math
 
+#This function is used to add <s></s> paddings and lowercase all words in the text file
 def addPadding(fileName, newFile):
     with open(fileName, 'r') as f:
         with open(newFile, 'w') as w:
             for line in f.readlines():
                 lineEdited = "<s> " + line.replace('\n', ' </s>\n')
                 w.write(lineEdited.lower())
-                
+
+#This function counts the total # of tokens that aren't in the training file then gets the percentage over all tokens             
 def unigramNotInTraining(fileName, unigram):
     tokens = 0
     tokensNotInTraining = 0
@@ -21,6 +24,7 @@ def unigramNotInTraining(fileName, unigram):
     print("Percentage =", (tokensNotInTraining / tokens))
     print()
 
+#This function is used to find the number of words that aren't in bigram file given the previous word in the file including the <s> </s> paddings then finds the percentages
 def bigramNotInTraining(fileName, unigram, bigram):
     bigrams = 0
     bigramsNotInTraining = 0
@@ -44,7 +48,8 @@ def bigramNotInTraining(fileName, unigram, bigram):
     print("Percentage =", (bigramsNotInTraining / bigrams))
     print()
 
-def sentencePerplexity(sentence, unigram, bigram, tokens):
+#This function is used to figure out the smoothing and perplexity of a given sentence
+def sentencePerplexityAndSmoothing(sentence, unigram, bigram, tokens):
     print(sentence)
     print()
     numWords = len(sentence.split())
@@ -58,9 +63,9 @@ def sentencePerplexity(sentence, unigram, bigram, tokens):
             logProb += math.log2(unigram[word] / tokens)
             print("p(" + word + ") =", str(unigram[word]) + "/" + str(tokens))
     print()
-    print("Unigram log probability =", logProb)
+    print("Unigram log probability =", logProb) #This calculates the sum of all tokens then does the log of that
     l = (1 / numWords) * logProb
-    print("Unigram perplexity =", pow(2, -l))
+    print("Unigram perplexity =", pow(2, -l)) #This is the formula used to find the perplexity (1/M (sigma log(x))
     print()
     sentenceProb = 1
     previous = ""
@@ -71,6 +76,7 @@ def sentencePerplexity(sentence, unigram, bigram, tokens):
             previous = word
         elif previous + " " + word not in bigram:
             sentenceProb *= (0 / unigram[previous])
+            #Shows the probability of each word
             print("p(" + word + "|" + previous + ") =", str(0) + "/" + str(unigram[previous]))
             previous = word
         else:
@@ -79,6 +85,7 @@ def sentencePerplexity(sentence, unigram, bigram, tokens):
                   str(bigram[previous + " " + word]) + "/" + str(unigram[previous]))
             previous = word
     print()
+    #This shows the bigram log probability and perplexity which is where you find the probability of a word given the previous word which is [(p(A) * p(B))/p(B)]
     if sentenceProb == 0:
         print("Bigram log probability =", str(0))
         print("Bigram perplexity =", "Undefined")
@@ -105,10 +112,11 @@ def sentencePerplexity(sentence, unigram, bigram, tokens):
     print()
     print("Bigram smoothing log probability =", logProb)
     l = (1 / numWords) * logProb
-    print("Bigram smoothing perplexity =", pow(2, -l))
+    print("Bigram smoothing perplexity =", pow(2, -l)) #This is for the bigram perplexity but add one smoothing which is to take away from the probability mass from observed events and reassigning it to *unseen* events
     print()
     
-def filePerplexity(fileName, unigram, bigram, tokens):
+#Notes for this function is almost the same as the sentencePerplexityAndSmoothing function
+def filePerplexityAndSmoothing(fileName, unigram, bigram, tokens):
     numWords = 0
     numWordsBigram = 0
     numLines = 0
@@ -176,10 +184,12 @@ def filePerplexity(fileName, unigram, bigram, tokens):
     print("Bigram smoothing perplexity =", pow(2, -l))
     print()
 
+#This creates the padded files
 addPadding('brown-train.txt', 'modified-brown-train.txt')
 addPadding('brown-test.txt', 'modified-brown-test.txt')
 addPadding('learner-test.txt', 'modified-learner-test.txt')
 
+#Counts the keys to values of the dictionary 
 brown_train_file = open('modified-brown-train.txt', 'r')
 count = {}
 for line in brown_train_file:
@@ -190,6 +200,7 @@ for line in brown_train_file:
             count[word] = 1
 brown_train_file.close()
 
+#This writes padding and unknown from modified-brown-training to a new file called unknown-brown-train.txt
 currentFile = open('modified-brown-train.txt', 'r')
 newFile = open('unknown-brown-train.txt', 'w')
 for line in currentFile:
@@ -204,6 +215,7 @@ for line in currentFile:
 currentFile.close()
 newFile.close()
 
+#Opens the new file and counts the total # of unigrams and bigrams
 textFile = open('unknown-brown-train.txt', 'r')
 unigram = {}
 bigram = {}
@@ -225,10 +237,12 @@ for line in textFile:
 unigramVocSize = len(unigram.keys())
 textFile.close()
 
+#Solutions start here
 print("SOLUTION TO #1")
 print("Unique words in training corpus =", unigramVocSize)
 print()
 
+#Get the number of tokens in the corpus
 values = unigram.values()
 tokens = 0
 for val in values:
@@ -242,20 +256,21 @@ print("SOLUTION TO #5/#6")
 sentence1 = "<s> He was laughed off the screen . </s>"
 sentence2 = "<s> There was no compulsion behind them . </s>"
 sentence3 = "<s> I look forward to hearing your reply . </s>"
-sentencePerplexity(sentence1, unigram, bigram, tokens)
-sentencePerplexity(sentence2, unigram, bigram, tokens)
-sentencePerplexity(sentence3, unigram, bigram, tokens)
+sentencePerplexityAndSmoothing(sentence1, unigram, bigram, tokens)
+sentencePerplexityAndSmoothing(sentence2, unigram, bigram, tokens)
+sentencePerplexityAndSmoothing(sentence3, unigram, bigram, tokens)
 
 print("SOLUTION TO #7")
 textFile1 = open('modified-brown-test.txt', 'r')
 textFile2 = open('modified-learner-test.txt', 'r')
-filePerplexity(textFile1, unigram, bigram, tokens)
-filePerplexity(textFile2, unigram, bigram, tokens)
+filePerplexityAndSmoothing(textFile1, unigram, bigram, tokens)
+filePerplexityAndSmoothing(textFile2, unigram, bigram, tokens)
 textFile1.close()
 textFile2.close()
 
 print("The modified-learner-test.txt file had higher values than the modified-brown-test.txt file, but the bigram perplexity with and without smoothing but had more than the unigram perplexity.")
 
+#Opens modified-brown-train.txt file and counts the number of unigrams there are
 unigram_file = open('modified-brown-train.txt', 'r')
 unigram = {}
 for line in unigram_file:
