@@ -154,4 +154,4 @@ Bigram perplexity = 0.8933000403301726
 
 Bigram smoothing perplexity = 0.0009550340033493818
 
-The modified-learner-test.txt file had higher values than the modified-brown-test.txt file, but the bigram perplexity with and without smoothing but had more than the unigram perplexity.
+The perplexity before and after smoothing were low for both files but unigram perplexity was higher for the modified-learner-test.txt than the modified-brown-test.txt
