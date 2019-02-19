@@ -19,8 +19,6 @@ def unigramNotInTraining(fileName, unigram):
             if word not in unigram:
                 tokensNotInTraining += 1
     print(fileName.name)
-    print("Total # of words =", tokens)
-    print("Words not in training data =", tokensNotInTraining)
     print("Percentage =", (tokensNotInTraining / tokens))
     print()
 
@@ -30,11 +28,11 @@ def bigramNotInTraining(fileName, unigram, bigram):
     bigramsNotInTraining = 0
     for line in fileName:
         previous = ""
-        for word in line.split():
-            if word not in unigram:
-                word = "<unk>"
+        for word in line.split():   
             if word == '<s>':
                 previous = word
+            if word not in unigram:
+                word = "<unk>"
             elif previous + " " + word not in bigram:
                 bigramsNotInTraining += 1
                 bigrams += 1
@@ -43,8 +41,6 @@ def bigramNotInTraining(fileName, unigram, bigram):
                 bigrams += 1
                 previous = word
     print(fileName.name)
-    print("Total # of words =", bigrams)
-    print("Bigrams not in training data =", bigramsNotInTraining)
     print("Percentage =", (bigramsNotInTraining / bigrams))
     print()
 
@@ -52,135 +48,130 @@ def bigramNotInTraining(fileName, unigram, bigram):
 def sentencePerplexityAndSmoothing(sentence, unigram, bigram, tokens):
     print(sentence)
     print()
-    numWords = len(sentence.split())
-    logProb = 0
-    for word in sentence.lower().split():
-        if word not in unigram:
-            word = "<unk>"
+    words = len(sentence.split())
+    logProbability = 0
+    for word in sentence.lower().split():  
         if word == '<s>':
             pass
-        else:
-            logProb += math.log2(unigram[word] / tokens)
-            print("p(" + word + ") =", str(unigram[word]) + "/" + str(tokens))
-    print()
-    print("Unigram log probability =", logProb) #This calculates the sum of all tokens then does the log of that
-    l = (1 / numWords) * logProb
-    print("Unigram perplexity =", pow(2, -l)) #This is the formula used to find the perplexity (1/M (sigma log(x))
-    print()
-    sentenceProb = 1
-    previous = ""
-    for word in sentence.lower().split():
         if word not in unigram:
             word = "<unk>"
+        else:
+            logProbability += math.log2(unigram[word] / tokens)
+            print("p(" + word + ") =", str(unigram[word]) + "/" + str(tokens))
+    print()
+    print("Unigram log probability =", logProbability) #This calculates the sum of all tokens then does the log of that
+    l = (1 / words) * logProbability
+    print("Unigram perplexity =", pow(2, -l)) #This is the formula used to find the perplexity (1/M (sigma log(x))
+    print()
+    sentenceProbability = 1
+    previous = ""
+    for word in sentence.lower().split():   
         if word == '<s>':
             previous = word
+        if word not in unigram:
+            word = "<unk>"
         elif previous + " " + word not in bigram:
-            sentenceProb *= (0 / unigram[previous])
+            sentenceProbability *= (0 / unigram[previous])
             #Shows the probability of each word
             print("p(" + word + "|" + previous + ") =", str(0) + "/" + str(unigram[previous]))
             previous = word
         else:
-            sentenceProb *= (bigram[previous + " " + word] / unigram[previous])
+            sentenceProbability *= (bigram[previous + " " + word] / unigram[previous])
             print("p(" + word + "|" + previous + ") =",
                   str(bigram[previous + " " + word]) + "/" + str(unigram[previous]))
             previous = word
     print()
     #This shows the bigram log probability and perplexity which is where you find the probability of a word given the previous word which is [(p(A) * p(B))/p(B)]
-    if sentenceProb == 0:
+    if sentenceProbability == 0:
         print("Bigram log probability =", str(0))
         print("Bigram perplexity =", "Undefined")
     else:
-        print("Bigram log probability =", math.log2(sentenceProb))
-        l = (1 / numWords) * math.log2(sentenceProb)
+        print("Bigram log probability =", math.log2(sentenceProbability))
+        l = (1 / words) * math.log2(sentenceProbability)
         print("Bigram perplexity =", pow(2, -l))
     print()
-    logProb = 0
-    for word in sentence.lower().split():
-        if word not in unigram:
-            word = "<unk>"
+    logProbability = 0
+    for word in sentence.lower().split(): 
         if word == '<s>':
             previous = word
+        if word not in unigram:
+            word = "<unk>"
         elif previous + " " + word not in bigram:
-            logProb += math.log2(1 / (unigram[previous] + len(unigram.items())))
+            logProbability += math.log2(1 / (unigram[previous] + len(unigram.items())))
             print("p(" + word + "|" + previous + ") =", str(1) + "/" + str(unigram[word] + len(unigram.items())))
             previous = word
         else:
-            logProb += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
+            logProbability += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
             print("p(" + word + "|" + previous + ") =", str(bigram[previous + " " + word] + 1) + "/" + str(
                 unigram[previous] + len(unigram.items())))
             previous = word
     print()
-    print("Bigram smoothing log probability =", logProb)
-    l = (1 / numWords) * logProb
+    print("Bigram smoothing log probability =", logProbability)
+    l = (1 / words) * logProbability
     print("Bigram smoothing perplexity =", pow(2, -l)) #This is for the bigram perplexity but add one smoothing which is to take away from the probability mass from observed events and reassigning it to *unseen* events
     print()
     
 #Notes for this function is almost the same as the sentencePerplexityAndSmoothing function
 def filePerplexityAndSmoothing(fileName, unigram, bigram, tokens):
-    numWords = 0
-    numWordsBigram = 0
-    numLines = 0
-    numLinesDiscarded = 0
+    words = 0
+    wordsBigram = 0
     for line in fileName:
-        numLines += 1
         for word in line.split():
-            numWords += 1
-            numWordsBigram += 1
+            words += 1
+            wordsBigram += 1
     fileName = open(fileName.name, 'r')
-    totalUnigramLogProb = 0
-    totalBigramLogProb = 0
-    totalSmoothedBigramLogProb = 0
+    totalUnigramLogProbability = 0
+    totalBigramLogProbability = 0
+    totalSmoothedBigramLogProbability = 0
     for line in fileName:
-        logProb = 0
+        logProbability = 0
         for word in line.split():
-            if word not in unigram:
-                word = "<unk>"
             if word == '<s>':
                 pass
+            if word not in unigram:
+                word = "<unk>"
             else:
-                logProb += math.log2(unigram[word] / tokens)
-        totalUnigramLogProb += logProb
-        sentenceProb = 1
+                logProbability += math.log2(unigram[word] / tokens)
+        totalUnigramLogProbability += logProbability
+        sentenceProbability = 1
         previous = ""
         for word in line.split():
-            if word not in unigram:
-                word = "<unk>"
             if word == '<s>':
                 previous = word
+            if word not in unigram:
+                word = "<unk>"
             elif previous + " " + word not in bigram:
-                sentenceProb *= (0 / unigram[previous])
+                sentenceProbability *= (0 / unigram[previous])
                 previous = word
             else:
-                sentenceProb *= (bigram[previous + " " + word] / unigram[previous])
+                sentenceProbability *= (bigram[previous + " " + word] / unigram[previous])
                 previous = word
-        if sentenceProb == 0:
-            numWordsBigram -= len(line.split())
-            numLinesDiscarded += 1
+        if sentenceProbability == 0:
+            wordsBigram -= len(line.split())
         else:
-            totalBigramLogProb += math.log2(sentenceProb)
-        logProb = 0
-        for word in line.split():
-            if word not in unigram:
-                word = "<unk>"
+            totalBigramLogProbability += math.log2(sentenceProbability)
+        logProbability = 0
+        for word in line.split(): 
             if word == '<s>':
                 previous = word
+            if word not in unigram:
+                word = "<unk>"
             elif previous + " " + word not in bigram:
-                logProb += math.log2(1 / (unigram[previous] + len(unigram.items())))
+                logProbability += math.log2(1 / (unigram[previous] + len(unigram.items())))
                 previous = word
             else:
-                logProb += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
+                logProbability += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
                 previous = word
-        totalSmoothedBigramLogProb += logProb
+        totalSmoothedBigramLogProbability += logProbability
     print(fileName.name)
     print()
-    l = (1 / numWords) * totalUnigramLogProb
+    l = (1 / words) * totalUnigramLogProbability
     print("Unigram perplexity =", pow(2, -l))
     print()
-    l = (1 / numWordsBigram) * totalBigramLogProb
+    l = (1 / wordsBigram) * totalBigramLogProbability
     print("Bigram perplexity =", pow(2, -l))
-    print(numLinesDiscarded, "of", numLines, "sentences had zero probability and were discarded")
     print()
-    l = (1 / numWords) * totalSmoothedBigramLogProb
+    l = (1 / words) * totalSmoothedBigramLogProbability
     print("Bigram smoothing perplexity =", pow(2, -l))
     print()
 
