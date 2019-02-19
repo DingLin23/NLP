@@ -111,7 +111,7 @@ def sentencePerplexityAndSmoothing(sentence, unigram, bigram, tokens):
     print("Bigram smoothing perplexity =", pow(2, -l)) #This is for the bigram perplexity but add one smoothing which is to take away from the probability mass from observed events and reassigning it to *unseen* events
     print()
     
-#Notes for this function is almost the same as the sentencePerplexityAndSmoothing function
+#Notes for this function are almost the same as the sentencePerplexityAndSmoothing function
 def filePerplexityAndSmoothing(fileName, unigram, bigram, tokens):
     words = 0
     wordsBigram = 0
