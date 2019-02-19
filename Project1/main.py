@@ -236,8 +236,8 @@ print()
 #Get the number of tokens in the corpus
 values = unigram.values()
 tokens = 0
-for val in values:
-    tokens += val
+for v in values:
+    tokens += v
 
 print("SOLUTION TO #2")
 print("Word tokens in training corpus =", tokens)
