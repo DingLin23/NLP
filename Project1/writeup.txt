@@ -141,14 +141,12 @@ Question 7
 modified-brown-test.txt
 Unigram perplexity = 320.1785803202881
 
-
 Bigram perplexity = 0.8393569849652629
 
 Bigram smoothing perplexity = 0.0010327556921192905
 
 modified-learner-test.txt
 Unigram perplexity = 348.7097569950318
-
 
 Bigram perplexity = 0.8933000403301726
 
