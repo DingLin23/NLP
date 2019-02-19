@@ -137,18 +137,21 @@ Bigram smoothing log probability = -93.4932169533023
 Bigram smoothing perplexity = 652.268295379401
 
 Question 7
-modified-brown-test.txt
 
+modified-brown-test.txt
 Unigram perplexity = 320.1785803202881
 
-Bigram perplexity = 21.70397754661539
 
-Bigram smoothing perplexity = 668.709516762931
+Bigram perplexity = 0.8393569849652629
+
+Bigram smoothing perplexity = 0.0010327556921192905
 
 modified-learner-test.txt
-
 Unigram perplexity = 348.7097569950318
 
-Bigram perplexity = 35.03097322384013
 
-Bigram smoothing perplexity = 845.4916726844544
+Bigram perplexity = 0.8933000403301726
+
+Bigram smoothing perplexity = 0.0009550340033493818
+
+The modified-learner-test.txt file had higher values than the modified-brown-test.txt file, but the bigram perplexity with and without smoothing but had more than the unigram perplexity.
