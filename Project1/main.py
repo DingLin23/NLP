@@ -286,7 +286,7 @@ bigramFilePerplexityAndSmoothing(textFile2, unigram, bigram)
 textFile1.close()
 textFile2.close()
 
-print("The modified-learner-test.txt file had higher values than the modified-brown-test.txt file, but the bigram perplexity with and without smoothing but had more than the unigram perplexity.")
+print("The modified-learner-test.txt file had higher values than the modified-brown-test.txt file, but the bigram perplexity with and without smoothing had more than the unigram perplexity.")
 print()
 
 #Opens modified-brown-train.txt file and counts the number of unigrams there are
