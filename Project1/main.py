@@ -56,14 +56,11 @@ def unigramSentencePerplexity(sentence, unigram, tokens):
             pass
         else:
             logProbability += math.log2(unigram[word] / tokens)
-            print("p(" + word + ") =", str(unigram[word]) + "/" + str(tokens))
-    print()
     print("Unigram log probability =", logProbability) #This calculates the sum of all tokens then does the log of that
     l = (1 / words) * logProbability
     print("Unigram perplexity =", pow(2, -l)) #This is the formula used to find the perplexity (1/M (sigma log(x))
-    print()
     
-def bigramWordProbability(sentence, unigram, bigram):
+def bigramSentencePerplexity(sentence, unigram, bigram):
     sentenceProbability = 1
     previous = ""
     words = len(sentence.split())
@@ -74,24 +71,19 @@ def bigramWordProbability(sentence, unigram, bigram):
             previous = word
         elif previous + " " + word not in bigram:
             sentenceProbability *= (0 / unigram[previous])
-            #Shows the probability of each word
-            print("p(" + word + "|" + previous + ") =", str(0) + "/" + str(unigram[previous]))
             previous = word
         else:
             sentenceProbability *= (bigram[previous + " " + word] / unigram[previous])
-            print("p(" + word + "|" + previous + ") =",
-                  str(bigram[previous + " " + word]) + "/" + str(unigram[previous]))
             previous = word
     print()   
     #This shows the bigram log probability and perplexity which is where you find the probability of a word given the previous word which is [(p(A) * p(B))/p(B)]
     if sentenceProbability == 0:
         print("Bigram log probability =", str(0))
-        print("Bigram perplexity =", "Undefined")
+        print("Bigram perplexity = ?")
     else:
         print("Bigram log probability =", math.log2(sentenceProbability))
         l = (1 / words) * math.log2(sentenceProbability)
         print("Bigram perplexity =", pow(2, -l))
-    print()
     
 #This function is used to figure out the smoothing and perplexity for bigram
 def bigramSentencePerplexityAndSmoothing(sentence, unigram, bigram):
@@ -105,12 +97,9 @@ def bigramSentencePerplexityAndSmoothing(sentence, unigram, bigram):
             previous = word
         elif previous + " " + word not in bigram:
             logProbability += math.log2(1 / (unigram[previous] + len(unigram.items())))
-            print("p(" + word + "|" + previous + ") =", str(1) + "/" + str(unigram[word] + len(unigram.items())))
             previous = word
         else:
             logProbability += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
-            print("p(" + word + "|" + previous + ") =", str(bigram[previous + " " + word] + 1) + "/" + str(
-                unigram[previous] + len(unigram.items())))
             previous = word
     print()
     print("Bigram smoothing log probability =", logProbability)
@@ -137,8 +126,7 @@ def unigramFilePerplexity(fileName, unigram, tokens):
         totalUnigramLogProbability += logProbability
     m = (1 / words) * totalUnigramLogProbability
     print(fileName.name)
-    print("Unigram perplexity =", pow(2, -m))   
-    print()
+    print("\nUnigram perplexity =", pow(2, -m))   
     
 def bigramFilePerplexityAndSmoothing(fileName, unigram, bigram):
     wordsBigram = 0
@@ -180,13 +168,10 @@ def bigramFilePerplexityAndSmoothing(fileName, unigram, bigram):
                 logProbability += math.log2((bigram[previous + " " + word] + 1) / (unigram[previous] + len(unigram.items())))
                 previous = word
         totalSmoothedBigramLogProbability += logProbability
-    print()
     m = (1 / wordsBigram) * totalBigramLogProbability
     print("Bigram perplexity =", pow(2, -m))
-    print()
     m = (1 / wordsBigram) * totalSmoothedBigramLogProbability
     print("Bigram smoothing perplexity =", pow(2, -m))
-    print()
 
 #This creates the padded files
 addPadding('brown-train.txt', 'modified-brown-train.txt')
@@ -242,7 +227,7 @@ unigramVocSize = len(unigram.keys())
 textFile.close()
 
 #Solutions start here
-print("SOLUTION TO #1")
+print("---------------------------------------SOLUTION TO #1--------------------------")
 print("Unique words in training corpus =", unigramVocSize)
 print()
 
@@ -252,36 +237,37 @@ tokens = 0
 for v in values:
     tokens += v
 
-print("SOLUTION TO #2")
+print("---------------------------------------SOLUTION TO #2---------------------------")
 print("Word tokens in training corpus =", tokens)
 print()
 
-print("SOLUTION TO #5/#6")
+print("---------------------------------------SOLUTION TO #5/#6-----------------------")
 sentence1 = "<s> He was laughed off the screen . </s>"
 sentence2 = "<s> There was no compulsion behind them . </s>"
 sentence3 = "<s> I look forward to hearing your reply . </s>"
 
 unigramSentencePerplexity(sentence1, unigram, tokens)
-bigramWordProbability(sentence1, unigram, bigram)
+bigramSentencePerplexity(sentence1, unigram, bigram)
 bigramSentencePerplexityAndSmoothing(sentence1, unigram, bigram)
 
 unigramSentencePerplexity(sentence2, unigram, tokens)
-bigramWordProbability(sentence2, unigram, bigram)
+bigramSentencePerplexity(sentence2, unigram, bigram)
 bigramSentencePerplexityAndSmoothing(sentence2, unigram, bigram)
 
 unigramSentencePerplexity(sentence3, unigram, tokens)
-bigramWordProbability(sentence3, unigram, bigram)
+bigramSentencePerplexity(sentence3, unigram, bigram)
 bigramSentencePerplexityAndSmoothing(sentence3, unigram, bigram)
 
-print("SOLUTION TO #7")
+print("---------------------------------------SOLUTION TO #7---------------------------")
 textFile1 = open('modified-brown-test.txt', 'r')
 textFile2 = open('modified-learner-test.txt', 'r')
 
 unigramFilePerplexity(textFile1, unigram, tokens)
 bigramFilePerplexityAndSmoothing(textFile1, unigram, bigram)
-
+print()
 unigramFilePerplexity(textFile2, unigram, tokens)
 bigramFilePerplexityAndSmoothing(textFile2, unigram, bigram)
+print()
 
 textFile1.close()
 textFile2.close()
@@ -300,7 +286,7 @@ for line in unigram_file:
             unigram[word] = 1
 unigram_file.close()
 
-print("SOLUTION TO #3")
+print("----------------------------------SOLUTION TO #3------------------------------")
 print()
 fileName1 = open('modified-brown-test.txt', 'r')
 fileName2 = open('modified-learner-test.txt', 'r')
@@ -309,7 +295,7 @@ unigramNotInTraining(fileName2, unigram)
 fileName1.close()
 fileName2.close()
 
-print("SOLUTION TO #4")
+print("----------------------------------SOLUTION TO #4-------------------------------")
 print()
 File1 = open('modified-brown-test.txt', 'r')
 File2 = open('modified-learner-test.txt', 'r')
