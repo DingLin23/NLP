@@ -1,0 +1,9 @@
+Total number of documents/lines in input5
+Vocabulary of unique words: ['fun', 'couple', 'love', 'fast', 'furious', 'shoot', 'fly']
+Classes:['comedy', 'action']
+Count of words, given class: {'comedy': 9, 'action': 11}
+Word likelihoods with add - 1 smoothing with respect to class: {'comedy': {'fun': 0.25, 'couple': 0.1875, 'love': 0.1875, 'fast': 0.125, 'furious': 0.0625, 'shoot': 0.0625, 'fly': 0.125}, 'action': {'fun': 0.1111111111111111, 'couple': 0.05555555555555555, 'love': 0.1111111111111111, 'fast': 0.16666666666666666, 'furious': 0.16666666666666666, 'shoot': 0.2777777777777778, 'fly': 0.1111111111111111}}
+Prior probabilities: 
+{'comedy': 0.4, 'action': 0.6}
+Probabilities of test data: {'comedy': 7.324218750000001e-05, 'action': 0.00017146776406035664}
+The most likely class for the test document: action
