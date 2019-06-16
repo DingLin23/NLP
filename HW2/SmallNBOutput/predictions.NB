@@ -1,0 +1,13 @@
+Predictions for Test Reviews: 
+
+	1		 | 		 Predicted Class: action		 | 		 Actual Class: action
+
+
+ Total Reviews: 1
+ Amount Predicted Correctly: 1
+ Amount Predicted Incorrectly: 0
+ Accuracy: 100.0%
+
+ Prior Probabilities: 
+	 Negative: -1.3219280948873622
+	 Positive: -0.7369655941662062
