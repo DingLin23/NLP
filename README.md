@@ -1,2 +1,2 @@
 # NLP
-NLP Projects (Mostly from NLP class)
+NLP class projects
